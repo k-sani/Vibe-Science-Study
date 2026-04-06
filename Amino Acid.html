@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아미노산 마스터: 4단계 학습</title>
+    <style>
+        :root {
+            --primary: #4a90e2; --success: #2ecc71; --error: #e74c3c; --bg: #f8f9fa;
+        }
+        body { font-family: 'Pretendard', sans-serif; background: var(--bg); display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        
+        /* 메뉴 스타일 */
+        .menu { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }
+        .menu button { padding: 10px 15px; border: none; border-radius: 20px; background: white; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: 0.3s; }
+        .menu button.active { background: var(--primary); color: white; }
+
+        .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 100%; max-width: 600px; text-align: center; }
+        
+        /* 이미지 확대 설정 */
+        .img-box { width: 100%; height: 350px; background: #f0f0f0; border-radius: 15px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .img-box img { max-width: 90%; max-height: 90%; transform: scale(3); object-fit: contain; }
+
+        .info-text { font-size: 1.5rem; font-weight: bold; margin: 10px 0; }
+        .sub-text { color: #666; margin-bottom: 20px; }
+
+        /* 입력 및 선택지 스타일 */
+        .input-group { margin: 15px 0; text-align: left; }
+        input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; box-sizing: border-box; font-size: 1rem; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .option-btn { padding: 15px; border: 2px solid #eee; border-radius: 10px; background: white; cursor: pointer; font-size: 1rem; transition: 0.2s; }
+        .option-btn:hover { border-color: var(--primary); }
+
+        .nav-btns { display: flex; gap: 10px; margin-top: 20px; }
+        .main-btn { flex: 1; padding: 15px; border: none; border-radius: 10px; background: var(--primary); color: white; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
+        .main-btn:disabled { background: #ccc; }
+        
+        #result { margin-top: 15px; font-weight: bold; min-height: 1.2rem; }
+        .correct { color: var(--success); }
+        .wrong { color: var(--error); }
+    </style>
+</head>
+<body>
+
+<div class="menu" id="mode-menu">
+    <button onclick="changeMode(0)" id="m0" class="active">단계0: 암기하기</button>
+    <button onclick="changeMode(1)" id="m1">단계1: 이름 고르기</button>
+    <button onclick="changeMode(2)" id="m2">단계2: 약자 쓰기</button>
+    <button onclick="changeMode(3)" id="m3">단계3: 전체 주관식</button>
+</div>
+
+<div class="container">
+    <div id="quiz-ui">
+        </div>
+    <div id="result"></div>
+    <div class="nav-btns">
+        <button id="prev-btn" class="main-btn" style="background:#666" onclick="move(-1)">이전</button>
+        <button id="next-btn" class="main-btn" onclick="checkOrNext()">확인 / 다음</button>
+    </div>
+</div>
+
+<script>
+    const aminoData = [
+        { ko: ["글리신", "글라이신"], en3: ["Gly"], en1: ["G"], img: "amino1.png" },
+        { ko: ["알라닌"], en3: ["Ala"], en1: ["A"], img: "amino2.png" },
+        { ko: ["발린"], en3: ["Val"], en1: ["V"], img: "amino3.png" },
+        { ko: ["루신", "류신"], en3: ["Leu"], en1: ["L"], img: "amino4.png" },
+        { ko: ["아이소루신", "이소류신"], en3: ["Ile"], en1: ["I"], img: "amino5.png" },
+        { ko: ["메싸이오닌", "메티오닌"], en3: ["Met"], en1: ["M"], img: "amino6.png" },
+        { ko: ["페닐알라닌"], en3: ["Phe"], en1: ["F"], img: "amino7.png" },
+        { ko: ["트립토판"], en3: ["Trp"], en1: ["W"], img: "amino8.png" },
+        { ko: ["프롤린"], en3: ["Pro"], en1: ["P"], img: "amino9.png" },
+        { ko: ["세린"], en3: ["Ser"], en1: ["S"], img: "amino10.png" },
+        { ko: ["트레오닌"], en3: ["Thr"], en1: ["T"], img: "amino11.png" },
+        { ko: ["시스테인"], en3: ["Cys"], en1: ["C"], img: "amino12.png" },
+        { ko: ["티이로신", "타로신"], en3: ["Tyr"], en1: ["Y"], img: "amino13.png" },
+        { ko: ["아스파라진", "아스파라긴"], en3: ["Asn"], en1: ["N"], img: "amino14.png" },
+        { ko: ["글루타민"], en3: ["Gln"], en1: ["Q"], img: "amino15.png" },
+        { ko: ["아스파르트산", "아스파트산"], en3: ["Asp"], en1: ["D"], img: "amino16.png" },
+        { ko: ["글루탐산"], en3: ["Glu"], en1: ["E"], img: "amino17.png" },
+        { ko: ["라이신", "리신"], en3: ["Lys"], en1: ["K"], img: "amino18.png" },
+        { ko: ["아르지닌", "아르기닌"], en3: ["Arg"], en1: ["R"], img: "amino19.png" },
+        { ko: ["히스티딘"], en3: ["His"], en1: ["H"], img: "amino20.png" }
+    ];
+
+    // 배열을 무작위로 섞는 함수
+    let quizList = [...aminoData]; // 실제로 퀴즈에 사용할 리스트
+    let currentMode = 0;
+    let idx = 0;
+    let isAnswered = false;
+
+    // 2. 셔플 함수 (피셔-예이츠)
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // 3. 모드 변경 함수 (핵심: 여기서 섞어줌)
+    function changeMode(m) {
+        currentMode = m;
+        idx = 0;
+        isAnswered = false;
+
+        if (m === 0) {
+            quizList = [...aminoData]; // 암기 모드는 순서대로
+        } else {
+            quizList = shuffle([...aminoData]); // 1~3단계는 진입할 때마다 랜덤 섞기
+        }
+
+        document.querySelectorAll('.menu button').forEach(b => b.classList.remove('active'));
+        document.getElementById('m' + m).classList.add('active');
+        render();
+    }
+
+    // 4. 화면 그리기 함수 (quizList 참조 확인)
+    function render() {
+        const ui = document.getElementById('quiz-ui');
+        const res = document.getElementById('result');
+        const nextBtn = document.getElementById('next-btn');
+        const data = quizList[idx]; // 중요: quizList에서 가져옴
+        
+        res.innerText = "";
+        ui.innerHTML = "";
+        
+        if(currentMode !== 2) {
+            ui.innerHTML += `<div class="img-box"><img src="${data.img}" alt="구조식"></div>`;
+        }
+
+        if(currentMode === 0) {
+            ui.innerHTML += `<div class="info-text">${data.ko[0]}</div>`;
+            ui.innerHTML += `<div class="sub-text">${data.en3[0]} / ${data.en1[0]}</div>`;
+            nextBtn.innerText = "다음 아미노산";
+        } 
+        else if(currentMode === 1) {
+            ui.innerHTML += `<div class="sub-text">이 구조식의 한글 이름은?</div>`;
+            const options = [data.ko[0]]; 
+            while(options.length < 5) {
+                let r = aminoData[Math.floor(Math.random()*20)].ko[0]; 
+                if(!options.includes(r)) options.push(r);
+            }
+            options.sort(() => Math.random() - 0.5);
+            
+            let grid = `<div class="options-grid">`;
+            options.forEach(opt => {
+                grid += `<button class="option-btn" onclick="checkMultiple('${opt}')">${opt}</button>`;
+            });
+            grid += `</div>`;
+            ui.innerHTML += grid;
+            nextBtn.innerText = "건너뛰기";
+        }
+        else if(currentMode === 2 || currentMode === 3) {
+            if(currentMode === 2) {
+                ui.innerHTML += `<div class="info-text" style="margin-bottom:30px;">${data.ko[0]}</div>`;
+            } else {
+                ui.innerHTML += `<div class="input-group"><input type="text" id="i-ko" placeholder="한글 이름"></div>`;
+            }
+            ui.innerHTML += `
+                <div class="input-group"><input type="text" id="i-en3" placeholder="3글자 약자"></div>
+                <div class="input-group"><input type="text" id="i-en1" placeholder="1글자 약자"></div>
+            `;
+            nextBtn.innerText = "정답 확인";
+        }
+    }
+
+    // 5. 정답 체크 로직 (객관식)
+    function checkMultiple(choice) {
+        if(isAnswered) return;
+        const res = document.getElementById('result');
+        const data = quizList[idx];
+
+        if(data.ko.includes(choice)) { // 복수 정답 체크
+            res.innerHTML = "<span class='correct'>정답입니다! 🎉</span>";
+        } else {
+            res.innerHTML = `<span class='wrong'>틀렸습니다. 정답은 <b>${data.ko[0]}</b>입니다.</span>`;
+        }
+        isAnswered = true;
+        document.getElementById('next-btn').innerText = "다음 문제";
+    }
+
+    // 6. 정답 체크 로직 (주관식 및 다음 버튼)
+    function checkOrNext() {
+        if(currentMode === 0 || isAnswered) {
+            idx = (idx + 1) % quizList.length;
+            isAnswered = false;
+            render();
+            return;
+        }
+
+        const data = quizList[idx];
+        const res = document.getElementById('result');
+        
+        const ik = document.getElementById('i-ko')?.value.trim() || "";
+        const i3 = document.getElementById('i-en3')?.value.trim().toLowerCase() || "";
+        const i1 = document.getElementById('i-en1')?.value.trim().toUpperCase() || "";
+
+        const isKoCorrect = data.ko.includes(ik);
+        const isEn3Correct = data.en3.map(v => v.toLowerCase()).includes(i3);
+        const isEn1Correct = data.en1.map(v => v.toUpperCase()).includes(i1);
+
+        let correct = (currentMode === 2) ? (isEn3Correct && isEn1Correct) : (isKoCorrect && isEn3Correct && isEn1Correct);
+
+        if(correct) {
+                res.innerHTML = "<span class='correct'>완벽합니다! 🎉</span>";
+        } else {
+            res.innerHTML = `<span class='wrong'>오답! 정답: ${data.ko[0]}, ${data.en3[0]}, ${data.en1[0]}</span>`;
+        }
+        isAnswered = true;
+        document.getElementById('next-btn').innerText = "다음 문제";
+    }
+
+    function move(step) {
+        const len = quizList.length;
+        // 음수 방지 처리된 인덱스 이동
+        idx = (idx + step + len) % len;
+        isAnswered = false;
+        render();
+    }
+</script>
+
+</body>
+</html>
