@@ -3,222 +3,1196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>아미노산 마스터: 4단계 학습</title>
+    <title>화학 학습 마스터</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #4a90e2; --success: #2ecc71; --error: #e74c3c; --bg: #f8f9fa;
+            --bg: #0f0f13;
+            --surface: #1a1a24;
+            --surface2: #22222f;
+            --border: #2e2e42;
+            --accent1: #7c6af7;
+            --accent2: #f76a8a;
+            --accent3: #6af7c8;
+            --text: #e8e8f0;
+            --text-muted: #7a7a9a;
+            --success: #4ade80;
+            --error: #f87171;
+            --radius: 16px;
         }
-        body { font-family: 'Pretendard', sans-serif; background: var(--bg); display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        
-        /* 메뉴 스타일 */
-        .menu { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }
-        .menu button { padding: 10px 15px; border: none; border-radius: 20px; background: white; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: 0.3s; }
-        .menu button.active { background: var(--primary); color: white; }
 
-        .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 100%; max-width: 600px; text-align: center; }
-        
-        /* 이미지 확대 설정 */
-        .img-box { width: 100%; height: 350px; background: #f0f0f0; border-radius: 15px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .img-box img { max-width: 90%; max-height: 90%; transform: scale(3); object-fit: contain; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .info-text { font-size: 1.5rem; font-weight: bold; margin: 10px 0; }
-        .sub-text { color: #666; margin-bottom: 20px; }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
 
-        /* 입력 및 선택지 스타일 */
-        .input-group { margin: 15px 0; text-align: left; }
-        input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; box-sizing: border-box; font-size: 1rem; }
-        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        .option-btn { padding: 15px; border: 2px solid #eee; border-radius: 10px; background: white; cursor: pointer; font-size: 1rem; transition: 0.2s; }
-        .option-btn:hover { border-color: var(--primary); }
+        /* ─── HOME SCREEN ─── */
+        #home-screen {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow: hidden;
+        }
 
-        .nav-btns { display: flex; gap: 10px; margin-top: 20px; }
-        .main-btn { flex: 1; padding: 15px; border: none; border-radius: 10px; background: var(--primary); color: white; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
-        .main-btn:disabled { background: #ccc; }
-        
-        #result { margin-top: 15px; font-weight: bold; min-height: 1.2rem; }
+        #home-screen::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 60% 40% at 20% 30%, rgba(124,106,247,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 50% at 80% 70%, rgba(247,106,138,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 40% at 60% 20%, rgba(106,247,200,0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .home-header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .home-header .eyebrow {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent3);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .home-header h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #fff 0%, var(--accent1) 50%, var(--accent2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .home-header p {
+            color: var(--text-muted);
+            margin-top: 14px;
+            font-size: 1rem;
+            font-weight: 300;
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            width: 100%;
+            max-width: 700px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .app-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 36px 30px;
+            cursor: pointer;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.3s;
+            border-radius: 24px;
+        }
+
+        .app-card.amino::before {
+            background: radial-gradient(ellipse at top left, rgba(124,106,247,0.15), transparent 70%);
+        }
+
+        .app-card.chem::before {
+            background: radial-gradient(ellipse at top left, rgba(247,106,138,0.15), transparent 70%);
+        }
+
+        .app-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+
+        .app-card.amino:hover { border-color: var(--accent1); }
+        .app-card.chem:hover { border-color: var(--accent2); }
+        .app-card:hover::before { opacity: 1; }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+        }
+
+        .amino .card-icon { background: rgba(124,106,247,0.15); }
+        .chem .card-icon { background: rgba(247,106,138,0.15); }
+
+        .card-tag {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .amino .card-tag { color: var(--accent1); }
+        .chem .card-tag { color: var(--accent2); }
+
+        .app-card h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .app-card p {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        .card-arrow {
+            position: absolute;
+            bottom: 28px;
+            right: 28px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: transform 0.3s;
+        }
+
+        .amino .card-arrow { background: rgba(124,106,247,0.2); color: var(--accent1); }
+        .chem .card-arrow { background: rgba(247,106,138,0.2); color: var(--accent2); }
+        .app-card:hover .card-arrow { transform: translateX(4px); }
+
+        /* ─── APP SCREENS ─── */
+        .app-screen {
+            display: none;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        .app-screen.active {
+            display: flex;
+        }
+
+        /* Top nav bar */
+        .topbar {
+            display: flex;
+            align-items: center;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(15,15,19,0.8);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            gap: 16px;
+        }
+
+        .back-btn {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            padding: 8px 14px;
+            cursor: pointer;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .back-btn:hover { background: var(--border); }
+
+        .topbar-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        /* ─── AMINO ACID APP (original, themed) ─── */
+        #amino-app .app-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            flex: 1;
+        }
+
+        .menu {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .menu button {
+            padding: 9px 16px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--surface);
+            color: var(--text-muted);
+            cursor: pointer;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+
+        .menu button.active {
+            background: var(--accent1);
+            border-color: var(--accent1);
+            color: white;
+        }
+
+        .container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 30px;
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .img-box {
+            width: 100%;
+            height: 320px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .img-box img {
+            max-width: 90%;
+            max-height: 90%;
+            transform: scale(3);
+            object-fit: contain;
+        }
+
+        .info-text { font-size: 1.4rem; font-weight: 700; margin: 10px 0; }
+        .sub-text { color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem; }
+
+        .input-group { margin: 12px 0; text-align: left; }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--surface2);
+            color: var(--text);
+            font-size: 1rem;
+            font-family: 'Noto Sans KR', sans-serif;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus { border-color: var(--accent1); }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .option-btn {
+            padding: 14px 10px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--surface2);
+            color: var(--text);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-family: 'Noto Sans KR', sans-serif;
+            transition: 0.2s;
+        }
+
+        .option-btn:hover { border-color: var(--accent1); }
+        .option-btn.correct-choice { border-color: var(--success); background: rgba(74,222,128,0.1); }
+        .option-btn.wrong-choice { border-color: var(--error); background: rgba(248,113,113,0.1); }
+
+        .nav-btns {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .main-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: var(--accent1);
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Noto Sans KR', sans-serif;
+            transition: opacity 0.2s;
+        }
+
+        .main-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        .main-btn.secondary { background: var(--surface2); border: 1px solid var(--border); }
+
+        #a-result { margin-top: 14px; font-weight: 700; min-height: 1.4rem; }
         .correct { color: var(--success); }
         .wrong { color: var(--error); }
+
+        /* ─── CHEM NAMING APP ─── */
+        #chem-app .app-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            flex: 1;
+        }
+
+        .chem-controls {
+            width: 100%;
+            max-width: 680px;
+            margin-bottom: 20px;
+        }
+
+        .chem-controls h3 {
+            font-size: 0.75rem;
+            font-family: 'Space Mono', monospace;
+            color: var(--accent2);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .category-checks {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .cat-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 8px 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            user-select: none;
+        }
+
+        .cat-check input { display: none; }
+
+        .cat-check .check-box {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            font-size: 0.7rem;
+        }
+
+        .cat-check.checked { border-color: var(--accent2); }
+        .cat-check.checked .check-box {
+            background: var(--accent2);
+            border-color: var(--accent2);
+            color: white;
+        }
+
+        .cat-check span:last-child {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .cat-check.checked span:last-child { color: var(--text); }
+
+        .mode-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .mode-tab {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--surface);
+            color: var(--text-muted);
+            cursor: pointer;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 0.82rem;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .mode-tab.active {
+            background: var(--accent2);
+            border-color: var(--accent2);
+            color: white;
+            font-weight: 700;
+        }
+
+        .start-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent2), #c44dff);
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Noto Sans KR', sans-serif;
+            transition: opacity 0.2s;
+            margin-bottom: 4px;
+        }
+
+        .start-btn:hover { opacity: 0.9; }
+
+        /* Chem quiz card */
+        .chem-quiz-wrap {
+            width: 100%;
+            max-width: 680px;
+            display: none;
+        }
+
+        .chem-quiz-wrap.active { display: block; }
+
+        .chem-progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .chem-progress .prog-text {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .prog-bar-wrap {
+            flex: 1;
+            height: 4px;
+            background: var(--surface2);
+            border-radius: 2px;
+            margin: 0 14px;
+        }
+
+        .prog-bar {
+            height: 100%;
+            background: var(--accent2);
+            border-radius: 2px;
+            transition: width 0.4s ease;
+        }
+
+        .chem-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .chem-card .question-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--accent2);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .chem-card .question-main {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            font-family: 'Space Mono', monospace;
+            letter-spacing: 0.05em;
+        }
+
+        .chem-card .question-sub {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .chem-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .chem-opt {
+            padding: 16px 10px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--surface);
+            color: var(--text);
+            cursor: pointer;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 0.85rem;
+            transition: 0.2s;
+            line-height: 1.4;
+        }
+
+        .chem-opt:hover:not(:disabled) { border-color: var(--accent2); }
+        .chem-opt.correct-choice { border-color: var(--success); background: rgba(74,222,128,0.12); color: var(--success); font-weight: 700; }
+        .chem-opt.wrong-choice { border-color: var(--error); background: rgba(248,113,113,0.1); color: var(--error); }
+        .chem-opt:disabled { cursor: not-allowed; }
+
+        .chem-nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        #c-result {
+            text-align: center;
+            font-weight: 700;
+            min-height: 1.4rem;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        sub { font-size: 0.65em; }
+        sup { font-size: 0.65em; }
+
+        /* score display */
+        .score-badge {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 4px 10px;
+            color: var(--text-muted);
+        }
     </style>
 </head>
 <body>
 
-<div class="menu" id="mode-menu">
-    <button onclick="changeMode(0)" id="m0" class="active">단계0: 암기하기</button>
-    <button onclick="changeMode(1)" id="m1">단계1: 이름 고르기</button>
-    <button onclick="changeMode(2)" id="m2">단계2: 약자 쓰기</button>
-    <button onclick="changeMode(3)" id="m3">단계3: 전체 주관식</button>
+<!-- ══════════════════════════════════════════════ -->
+<!--  HOME SCREEN                                  -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="home-screen">
+    <div class="home-header">
+        <div class="eyebrow">Study Master</div>
+        <h1>화학 학습<br>마스터</h1>
+        <p>학습할 주제를 선택하세요</p>
+    </div>
+    <div class="app-grid">
+        <div class="app-card amino" onclick="goTo('amino')">
+            <div class="card-icon">🧬</div>
+            <div class="card-tag">Biochemistry</div>
+            <h2>아미노산 마스터</h2>
+            <p>20가지 아미노산의 구조식, 이름, 약자를 4단계로 학습합니다.</p>
+            <div class="card-arrow">→</div>
+        </div>
+        <div class="app-card chem" onclick="goTo('chem')">
+            <div class="card-icon">⚗️</div>
+            <div class="card-tag">Nomenclature</div>
+            <h2>화학 명명법 마스터</h2>
+            <p>이온·공유·산 화합물 명명법을 5가지 유형별로 퀴즈로 학습합니다.</p>
+            <div class="card-arrow">→</div>
+        </div>
+    </div>
 </div>
 
-<div class="container">
-    <div id="quiz-ui">
+<!-- ══════════════════════════════════════════════ -->
+<!--  AMINO ACID APP                               -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="amino-app" class="app-screen">
+    <div class="topbar">
+        <button class="back-btn" onclick="goHome()">← 홈</button>
+        <span class="topbar-title">🧬 아미노산 마스터</span>
+    </div>
+    <div class="app-content">
+        <div class="menu" id="a-mode-menu">
+            <button onclick="aChangeMode(0)" id="am0" class="active">단계0: 암기하기</button>
+            <button onclick="aChangeMode(1)" id="am1">단계1: 이름 고르기</button>
+            <button onclick="aChangeMode(2)" id="am2">단계2: 약자 쓰기</button>
+            <button onclick="aChangeMode(3)" id="am3">단계3: 전체 주관식</button>
         </div>
-    <div id="result"></div>
-    <div class="nav-btns">
-        <button id="prev-btn" class="main-btn" style="background:#666" onclick="move(-1)">이전</button>
-        <button id="next-btn" class="main-btn" onclick="checkOrNext()">확인 / 다음</button>
+        <div class="container">
+            <div id="a-quiz-ui"></div>
+            <div id="a-result"></div>
+            <div class="nav-btns">
+                <button class="main-btn secondary" onclick="aMove(-1)">이전</button>
+                <button id="a-next-btn" class="main-btn" onclick="aCheckOrNext()">확인 / 다음</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!--  CHEM NAMING APP                              -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="chem-app" class="app-screen">
+    <div class="topbar">
+        <button class="back-btn" onclick="goHome()">← 홈</button>
+        <span class="topbar-title">⚗️ 화학 명명법 마스터</span>
+        <div style="margin-left:auto;" id="c-score-badge" class="score-badge">0 / 0</div>
+    </div>
+    <div class="app-content">
+
+        <!-- Controls -->
+        <div class="chem-controls" id="chem-setup">
+            <h3>학습 범위 선택</h3>
+            <div class="category-checks" id="cat-checks"></div>
+
+            <h3>학습 모드</h3>
+            <div class="mode-tabs">
+                <div class="mode-tab active" onclick="cSelectMode(0,this)">이름 → 화학식</div>
+                <div class="mode-tab" onclick="cSelectMode(1,this)">화학식 → 이름</div>
+                <div class="mode-tab" onclick="cSelectMode(2,this)">랜덤 혼합</div>
+            </div>
+
+            <button class="start-btn" onclick="cStart()">퀴즈 시작 →</button>
+        </div>
+
+        <!-- Quiz -->
+        <div class="chem-quiz-wrap" id="chem-quiz">
+            <div class="chem-progress">
+                <span class="prog-text" id="c-prog-text">1 / 10</span>
+                <div class="prog-bar-wrap"><div class="prog-bar" id="c-prog-bar" style="width:0%"></div></div>
+                <button class="back-btn" onclick="cReset()">↺ 재설정</button>
+            </div>
+            <div class="chem-card" id="c-card">
+                <div class="question-label" id="c-label"></div>
+                <div class="question-main" id="c-main"></div>
+                <div class="question-sub" id="c-sub"></div>
+            </div>
+            <div id="c-result"></div>
+            <div class="chem-options" id="c-options"></div>
+            <div class="chem-nav">
+                <button class="main-btn secondary" onclick="cNext()" id="c-next-btn" disabled>다음 문제 →</button>
+            </div>
+        </div>
+
     </div>
 </div>
 
 <script>
-    const aminoData = [
-        { ko: ["글리신", "글라이신"], en3: ["Gly"], en1: ["G"], img: "amino1.png" },
-        { ko: ["알라닌"], en3: ["Ala"], en1: ["A"], img: "amino2.png" },
-        { ko: ["발린"], en3: ["Val"], en1: ["V"], img: "amino3.png" },
-        { ko: ["루신", "류신"], en3: ["Leu"], en1: ["L"], img: "amino4.png" },
-        { ko: ["아이소루신", "이소류신"], en3: ["Ile"], en1: ["I"], img: "amino5.png" },
-        { ko: ["메싸이오닌", "메티오닌"], en3: ["Met"], en1: ["M"], img: "amino6.png" },
-        { ko: ["페닐알라닌"], en3: ["Phe"], en1: ["F"], img: "amino7.png" },
-        { ko: ["트립토판"], en3: ["Trp"], en1: ["W"], img: "amino8.png" },
-        { ko: ["프롤린"], en3: ["Pro"], en1: ["P"], img: "amino9.png" },
-        { ko: ["세린"], en3: ["Ser"], en1: ["S"], img: "amino10.png" },
-        { ko: ["트레오닌"], en3: ["Thr"], en1: ["T"], img: "amino11.png" },
-        { ko: ["시스테인"], en3: ["Cys"], en1: ["C"], img: "amino12.png" },
-        { ko: ["타이로신", "티로신"], en3: ["Tyr"], en1: ["Y"], img: "amino13.png" },
-        { ko: ["아스파라진", "아스파라긴"], en3: ["Asn"], en1: ["N"], img: "amino14.png" },
-        { ko: ["글루타민"], en3: ["Gln"], en1: ["Q"], img: "amino15.png" },
-        { ko: ["아스파르트산", "아스파트산"], en3: ["Asp"], en1: ["D"], img: "amino16.png" },
-        { ko: ["글루탐산"], en3: ["Glu"], en1: ["E"], img: "amino17.png" },
-        { ko: ["라이신", "리신"], en3: ["Lys"], en1: ["K"], img: "amino18.png" },
-        { ko: ["아르지닌", "아르기닌"], en3: ["Arg"], en1: ["R"], img: "amino19.png" },
-        { ko: ["히스티딘"], en3: ["His"], en1: ["H"], img: "amino20.png" }
-    ];
+// ════════════════════════════════════════════════
+//  NAVIGATION
+// ════════════════════════════════════════════════
+function goTo(app) {
+    document.getElementById('home-screen').style.display = 'none';
+    document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(app + '-app').classList.add('active');
+    if (app === 'amino') aRender();
+    if (app === 'chem') cInit();
+}
 
-    // 배열을 무작위로 섞는 함수
-    let quizList = [...aminoData]; // 실제로 퀴즈에 사용할 리스트
-    let currentMode = 0;
-    let idx = 0;
-    let isAnswered = false;
+function goHome() {
+    document.getElementById('home-screen').style.display = 'flex';
+    document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
+}
 
-    // 2. 셔플 함수 (피셔-예이츠)
-    function shuffle(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
+// ════════════════════════════════════════════════
+//  AMINO ACID APP
+// ════════════════════════════════════════════════
+const aminoData = [
+    { ko: ["글리신", "글라이신"], en3: ["Gly"], en1: ["G"], img: "amino1.png" },
+    { ko: ["알라닌"], en3: ["Ala"], en1: ["A"], img: "amino2.png" },
+    { ko: ["발린"], en3: ["Val"], en1: ["V"], img: "amino3.png" },
+    { ko: ["루신", "류신"], en3: ["Leu"], en1: ["L"], img: "amino4.png" },
+    { ko: ["아이소루신", "이소류신"], en3: ["Ile"], en1: ["I"], img: "amino5.png" },
+    { ko: ["메싸이오닌", "메티오닌"], en3: ["Met"], en1: ["M"], img: "amino6.png" },
+    { ko: ["페닐알라닌"], en3: ["Phe"], en1: ["F"], img: "amino7.png" },
+    { ko: ["트립토판"], en3: ["Trp"], en1: ["W"], img: "amino8.png" },
+    { ko: ["프롤린"], en3: ["Pro"], en1: ["P"], img: "amino9.png" },
+    { ko: ["세린"], en3: ["Ser"], en1: ["S"], img: "amino10.png" },
+    { ko: ["트레오닌"], en3: ["Thr"], en1: ["T"], img: "amino11.png" },
+    { ko: ["시스테인"], en3: ["Cys"], en1: ["C"], img: "amino12.png" },
+    { ko: ["타이로신", "티로신"], en3: ["Tyr"], en1: ["Y"], img: "amino13.png" },
+    { ko: ["아스파라진", "아스파라긴"], en3: ["Asn"], en1: ["N"], img: "amino14.png" },
+    { ko: ["글루타민"], en3: ["Gln"], en1: ["Q"], img: "amino15.png" },
+    { ko: ["아스파르트산", "아스파트산"], en3: ["Asp"], en1: ["D"], img: "amino16.png" },
+    { ko: ["글루탐산"], en3: ["Glu"], en1: ["E"], img: "amino17.png" },
+    { ko: ["라이신", "리신"], en3: ["Lys"], en1: ["K"], img: "amino18.png" },
+    { ko: ["아르지닌", "아르기닌"], en3: ["Arg"], en1: ["R"], img: "amino19.png" },
+    { ko: ["히스티딘"], en3: ["His"], en1: ["H"], img: "amino20.png" }
+];
+
+let aQuizList = [...aminoData];
+let aMode = 0, aIdx = 0, aAnswered = false;
+
+function aShuffle(arr) {
+    for (let i = arr.length-1; i > 0; i--) {
+        const j = Math.floor(Math.random()*(i+1));
+        [arr[i],arr[j]] = [arr[j],arr[i]];
     }
+    return arr;
+}
 
-    // 3. 모드 변경 함수 (핵심: 여기서 섞어줌)
-    function changeMode(m) {
-        currentMode = m;
-        idx = 0;
-        isAnswered = false;
+function aChangeMode(m) {
+    aMode = m; aIdx = 0; aAnswered = false;
+    aQuizList = m === 0 ? [...aminoData] : aShuffle([...aminoData]);
+    document.querySelectorAll('#a-mode-menu button').forEach(b => b.classList.remove('active'));
+    document.getElementById('am'+m).classList.add('active');
+    aRender();
+}
 
-        if (m === 0) {
-            quizList = [...aminoData]; // 암기 모드는 순서대로
+function aRender() {
+    const ui = document.getElementById('a-quiz-ui');
+    const res = document.getElementById('a-result');
+    const nextBtn = document.getElementById('a-next-btn');
+    const data = aQuizList[aIdx];
+    res.innerText = '';
+    ui.innerHTML = '';
+
+    if (aMode !== 2) {
+        ui.innerHTML += `<div class="img-box"><img src="${data.img}" alt="구조식"></div>`;
+    }
+    if (aMode === 0) {
+        ui.innerHTML += `<div class="info-text">${data.ko[0]}</div>`;
+        ui.innerHTML += `<div class="sub-text">${data.en3[0]} / ${data.en1[0]}</div>`;
+        nextBtn.innerText = '다음 아미노산';
+    } else if (aMode === 1) {
+        ui.innerHTML += `<div class="sub-text">이 구조식의 한글 이름은?</div>`;
+        const opts = [data.ko[0]];
+        while (opts.length < 5) {
+            let r = aminoData[Math.floor(Math.random()*20)].ko[0];
+            if (!opts.includes(r)) opts.push(r);
+        }
+        opts.sort(() => Math.random()-0.5);
+        let grid = `<div class="options-grid">`;
+        opts.forEach(o => {
+            grid += `<button class="option-btn" onclick="aCheckMultiple('${o}')">${o}</button>`;
+        });
+        grid += `</div>`;
+        ui.innerHTML += grid;
+        nextBtn.innerText = '건너뛰기';
+    } else {
+        if (aMode === 2) {
+            ui.innerHTML += `<div class="info-text" style="margin-bottom:24px">${data.ko[0]}</div>`;
         } else {
-            quizList = shuffle([...aminoData]); // 1~3단계는 진입할 때마다 랜덤 섞기
+            ui.innerHTML += `<div class="input-group"><input type="text" id="i-ko" placeholder="한글 이름"></div>`;
         }
+        ui.innerHTML += `
+            <div class="input-group"><input type="text" id="i-en3" placeholder="3글자 약자 (예: Gly)"></div>
+            <div class="input-group"><input type="text" id="i-en1" placeholder="1글자 약자 (예: G)"></div>
+        `;
+        nextBtn.innerText = '정답 확인';
+    }
+}
 
-        document.querySelectorAll('.menu button').forEach(b => b.classList.remove('active'));
-        document.getElementById('m' + m).classList.add('active');
-        render();
+function aCheckMultiple(choice) {
+    if (aAnswered) return;
+    const data = aQuizList[aIdx];
+    const res = document.getElementById('a-result');
+    const btns = document.querySelectorAll('.option-btn');
+    btns.forEach(b => {
+        if (data.ko.includes(b.innerText)) b.classList.add('correct-choice');
+        else if (b.innerText === choice && !data.ko.includes(choice)) b.classList.add('wrong-choice');
+    });
+    if (data.ko.includes(choice)) {
+        res.innerHTML = "<span class='correct'>정답입니다! 🎉</span>";
+    } else {
+        res.innerHTML = `<span class='wrong'>틀렸습니다. 정답: <b>${data.ko[0]}</b></span>`;
+    }
+    aAnswered = true;
+    document.getElementById('a-next-btn').innerText = '다음 문제';
+}
+
+function aCheckOrNext() {
+    if (aMode === 0 || aAnswered) {
+        aIdx = (aIdx+1) % aQuizList.length;
+        aAnswered = false;
+        aRender();
+        return;
+    }
+    const data = aQuizList[aIdx];
+    const res = document.getElementById('a-result');
+    const ik = document.getElementById('i-ko')?.value.trim() || '';
+    const i3 = document.getElementById('i-en3')?.value.trim().toLowerCase() || '';
+    const i1 = document.getElementById('i-en1')?.value.trim().toUpperCase() || '';
+    const koOk = data.ko.includes(ik);
+    const e3Ok = data.en3.map(v=>v.toLowerCase()).includes(i3);
+    const e1Ok = data.en1.map(v=>v.toUpperCase()).includes(i1);
+    const ok = aMode === 2 ? (e3Ok && e1Ok) : (koOk && e3Ok && e1Ok);
+    if (ok) {
+        res.innerHTML = "<span class='correct'>완벽합니다! 🎉</span>";
+    } else {
+        res.innerHTML = `<span class='wrong'>오답! 정답: ${data.ko[0]}, ${data.en3[0]}, ${data.en1[0]}</span>`;
+    }
+    aAnswered = true;
+    document.getElementById('a-next-btn').innerText = '다음 문제';
+}
+
+function aMove(step) {
+    aIdx = (aIdx + step + aQuizList.length) % aQuizList.length;
+    aAnswered = false;
+    aRender();
+}
+
+// ════════════════════════════════════════════════
+//  CHEM NAMING APP
+// ════════════════════════════════════════════════
+
+// helper: 화학식을 HTML로 변환 (숫자→subscript, ^→superscript)
+function fmtFormula(f) {
+    return f
+        .replace(/\^([^^ ]+)/g, '<sup>$1</sup>')
+        .replace(/([A-Za-z\)]+)(\d+)/g, '$1<sub>$2</sub>');
+}
+
+const chemCategories = [
+    {
+        id: 0,
+        label: '① 이성분 이온 (단순)',
+        data: [
+            { name: '염화 소듐',       formula: 'NaCl' },
+            { name: '아이오딘화 포타슘', formula: 'KI' },
+            { name: '황화 칼슘',       formula: 'CaS' },
+            { name: '질소화 리튬',     formula: 'Li3N' },
+            { name: '브로민화 세슘',   formula: 'CsBr' },
+            { name: '산화 마그네슘',   formula: 'MgO' },
+            { name: '플루오린화 세슘', formula: 'CsF' },
+            { name: '염화 알루미늄',   formula: 'AlCl3' },
+            { name: '수소화 리튬',     formula: 'LiH' },
+            { name: '산화 칼슘',       formula: 'CaO' },
+        ]
+    },
+    {
+        id: 1,
+        label: '② 이성분 이온 (전이금속)',
+        data: [
+            { name: '염화 구리(II)',     formula: 'CuCl2' },
+            { name: '산화 수은(II)',     formula: 'HgO' },
+            { name: '산화 철(III)',      formula: 'Fe2O3' },
+            { name: '이산화 망가니즈(IV)', formula: 'MnO2' },
+            { name: '염화 납(II)',       formula: 'PbCl2' },
+            { name: '브로민화 코발트(II)', formula: 'CoBr2' },
+            { name: '염화 칼슘',         formula: 'CaCl2' },
+            { name: '산화 알루미늄',     formula: 'Al2O3' },
+            { name: '염화 크로뮴(III)',  formula: 'CrCl3' },
+        ]
+    },
+    {
+        id: 2,
+        label: '③ 다원자 이온',
+        data: [
+            { name: '수은(I)',      formula: 'Hg2^2+' },
+            { name: '암모늄',      formula: 'NH4^+' },
+            { name: '아질산',      formula: 'NO2^-' },
+            { name: '질산',        formula: 'NO3^-' },
+            { name: '아황산',      formula: 'SO3^2-' },
+            { name: '황산',        formula: 'SO4^2-' },
+            { name: '황산 수소',   formula: 'HSO4^-' },
+            { name: '수산화',      formula: 'OH^-' },
+            { name: '사이안화',    formula: 'CN^-' },
+            { name: '인산',        formula: 'PO4^3-' },
+            { name: '인산 수소',   formula: 'HPO4^2-' },
+            { name: '인산 이수소', formula: 'H2PO4^-' },
+            { name: '싸이오사이안화', formula: 'SCN^-' },
+            { name: '탄산',        formula: 'CO3^2-' },
+            { name: '탄산 수소(중탄산)', formula: 'HCO3^-' },
+            { name: '하이포아염소산', formula: 'ClO^-' },
+            { name: '아염소산',    formula: 'ClO2^-' },
+            { name: '염소산',      formula: 'ClO3^-' },
+            { name: '과염소산',    formula: 'ClO4^-' },
+            { name: '아세트산',    formula: 'CH3COO^-' },
+            { name: '과망가니즈산', formula: 'MnO4^-' },
+            { name: '중크로뮴산',  formula: 'Cr2O7^2-' },
+            { name: '크로뮴산',    formula: 'CrO4^2-' },
+            { name: '과산화',      formula: 'O2^2-' },
+            { name: '옥살산',      formula: 'C2O4^2-' },
+            { name: '싸이오황산',  formula: 'S2O3^2-' },
+        ]
+    },
+    {
+        id: 3,
+        label: '④ 이성분 공유결합',
+        data: [
+            { name: '일산화 이질소',  formula: 'N2O' },
+            { name: '일산화 질소',    formula: 'NO' },
+            { name: '이산화 질소',    formula: 'NO2' },
+            { name: '삼산화 이질소',  formula: 'N2O3' },
+            { name: '사산화 이질소',  formula: 'N2O4' },
+            { name: '오산화 이질소',  formula: 'N2O5' },
+            { name: '오염화 인',      formula: 'PCl5' },
+            { name: '삼염화 인',      formula: 'PCl3' },
+            { name: '이산화 황',      formula: 'SO2' },
+            { name: '육플루오린화 황', formula: 'SF6' },
+            { name: '삼산화 황',      formula: 'SO3' },
+            { name: '이산화 탄소',    formula: 'CO2' },
+        ]
+    },
+    {
+        id: 4,
+        label: '⑤ 산 (수소 포함)',
+        data: [
+            { name: '플루오린화수소산', formula: 'HF' },
+            { name: '염화수소산',      formula: 'HCl' },
+            { name: '브로민화수소산',  formula: 'HBr' },
+            { name: '아이오딘화수소산', formula: 'HI' },
+            { name: '사이안화수소산',  formula: 'HCN' },
+            { name: '황화수소산',      formula: 'H2S' },
+            { name: '질산',           formula: 'HNO3' },
+            { name: '아질산',         formula: 'HNO2' },
+            { name: '황산',           formula: 'H2SO4' },
+            { name: '아황산',         formula: 'H2SO3' },
+            { name: '인산',           formula: 'H3PO4' },
+            { name: '아세트산',       formula: 'CH3COOH' },
+        ]
+    }
+];
+
+let cSelectedCats = new Set([0]);
+let cMode = 0; // 0=name→formula, 1=formula→name, 2=random
+let cQuizList = [];
+let cIdx = 0;
+let cAnswered = false;
+let cScore = 0;
+let cTotal = 0;
+
+function cInit() {
+    // Build category checkboxes
+    const wrap = document.getElementById('cat-checks');
+    wrap.innerHTML = '';
+    chemCategories.forEach(cat => {
+        const isChecked = cSelectedCats.has(cat.id);
+        const div = document.createElement('label');
+        div.className = 'cat-check' + (isChecked ? ' checked' : '');
+        div.innerHTML = `
+            <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="cToggleCat(${cat.id}, this)">
+            <span class="check-box">${isChecked ? '✓' : ''}</span>
+            <span>${cat.label}</span>
+        `;
+        wrap.appendChild(div);
+    });
+    document.getElementById('chem-setup').style.display = 'block';
+    document.getElementById('chem-quiz').classList.remove('active');
+}
+
+function cToggleCat(id, checkbox) {
+    const label = checkbox.closest('.cat-check');
+    if (checkbox.checked) {
+        cSelectedCats.add(id);
+        label.classList.add('checked');
+        label.querySelector('.check-box').innerText = '✓';
+    } else {
+        cSelectedCats.delete(id);
+        label.classList.remove('checked');
+        label.querySelector('.check-box').innerText = '';
+    }
+}
+
+function cSelectMode(m, el) {
+    cMode = m;
+    document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+}
+
+function cStart() {
+    if (cSelectedCats.size === 0) { alert('최소 하나의 범위를 선택해주세요!'); return; }
+    // Build quiz list from selected categories
+    let pool = [];
+    chemCategories.forEach(cat => {
+        if (cSelectedCats.has(cat.id)) pool = pool.concat(cat.data);
+    });
+    cQuizList = cShuffle(pool);
+    cIdx = 0; cAnswered = false; cScore = 0; cTotal = 0;
+    document.getElementById('chem-setup').style.display = 'none';
+    document.getElementById('chem-quiz').classList.add('active');
+    cUpdateScore();
+    cRenderQ();
+}
+
+function cShuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length-1; i > 0; i--) {
+        const j = Math.floor(Math.random()*(i+1));
+        [a[i],a[j]] = [a[j],a[i]];
+    }
+    return a;
+}
+
+function cGetAllItems() {
+    let all = [];
+    chemCategories.forEach(cat => all = all.concat(cat.data));
+    return all;
+}
+
+function cRenderQ() {
+    const data = cQuizList[cIdx];
+    const total = cQuizList.length;
+
+    // Progress
+    document.getElementById('c-prog-text').innerText = `${cIdx+1} / ${total}`;
+    document.getElementById('c-prog-bar').style.width = ((cIdx+1)/total*100) + '%';
+
+    // Determine question direction
+    let showName; // true = show name, ask formula | false = show formula, ask name
+    if (cMode === 0) showName = true;
+    else if (cMode === 1) showName = false;
+    else showName = Math.random() < 0.5;
+
+    // Card
+    document.getElementById('c-label').innerText = showName ? '이름을 보고 화학식을 고르세요' : '화학식을 보고 이름을 고르세요';
+    if (showName) {
+        document.getElementById('c-main').innerHTML = data.name;
+        document.getElementById('c-sub').innerHTML = '';
+    } else {
+        document.getElementById('c-main').innerHTML = fmtFormula(data.formula);
+        document.getElementById('c-sub').innerHTML = '';
     }
 
-    // 4. 화면 그리기 함수 (quizList 참조 확인)
-    function render() {
-        const ui = document.getElementById('quiz-ui');
-        const res = document.getElementById('result');
-        const nextBtn = document.getElementById('next-btn');
-        const data = quizList[idx]; // 중요: quizList에서 가져옴
-        
-        res.innerText = "";
-        ui.innerHTML = "";
-        
-        if(currentMode !== 2) {
-            ui.innerHTML += `<div class="img-box"><img src="${data.img}" alt="구조식"></div>`;
-        }
+    // Options (6개)
+    const allItems = cGetAllItems();
+    const distractors = allItems.filter(d => d.formula !== data.formula);
+    const picked = cShuffle(distractors).slice(0, 5);
+    const options = cShuffle([data, ...picked]);
 
-        if(currentMode === 0) {
-            ui.innerHTML += `<div class="info-text">${data.ko[0]}</div>`;
-            ui.innerHTML += `<div class="sub-text">${data.en3[0]} / ${data.en1[0]}</div>`;
-            nextBtn.innerText = "다음 아미노산";
-        } 
-        else if(currentMode === 1) {
-            ui.innerHTML += `<div class="sub-text">이 구조식의 한글 이름은?</div>`;
-            const options = [data.ko[0]]; 
-            while(options.length < 5) {
-                let r = aminoData[Math.floor(Math.random()*20)].ko[0]; 
-                if(!options.includes(r)) options.push(r);
-            }
-            options.sort(() => Math.random() - 0.5);
-            
-            let grid = `<div class="options-grid">`;
-            options.forEach(opt => {
-                grid += `<button class="option-btn" onclick="checkMultiple('${opt}')">${opt}</button>`;
-            });
-            grid += `</div>`;
-            ui.innerHTML += grid;
-            nextBtn.innerText = "건너뛰기";
-        }
-        else if(currentMode === 2 || currentMode === 3) {
-            if(currentMode === 2) {
-                ui.innerHTML += `<div class="info-text" style="margin-bottom:30px;">${data.ko[0]}</div>`;
-            } else {
-                ui.innerHTML += `<div class="input-group"><input type="text" id="i-ko" placeholder="한글 이름"></div>`;
-            }
-            ui.innerHTML += `
-                <div class="input-group"><input type="text" id="i-en3" placeholder="3글자 약자"></div>
-                <div class="input-group"><input type="text" id="i-en1" placeholder="1글자 약자"></div>
-            `;
-            nextBtn.innerText = "정답 확인";
-        }
+    const wrap = document.getElementById('c-options');
+    wrap.innerHTML = '';
+    options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'chem-opt';
+        btn.innerHTML = showName ? fmtFormula(opt.formula) : opt.name;
+        btn.dataset.formula = opt.formula;
+        btn.onclick = () => cCheck(btn, data.formula, showName, options, data);
+        wrap.appendChild(btn);
+    });
+
+    document.getElementById('c-result').innerText = '';
+    document.getElementById('c-next-btn').disabled = true;
+    document.getElementById('c-next-btn').innerText = '다음 문제 →';
+    cAnswered = false;
+}
+
+function cCheck(btn, correctFormula, showName, options, data) {
+    if (cAnswered) return;
+    cAnswered = true;
+    cTotal++;
+
+    const chosen = btn.dataset.formula;
+    const isCorrect = chosen === correctFormula;
+
+    // Highlight all buttons
+    document.querySelectorAll('.chem-opt').forEach(b => {
+        if (b.dataset.formula === correctFormula) b.classList.add('correct-choice');
+        else if (b === btn && !isCorrect) b.classList.add('wrong-choice');
+        b.disabled = true;
+    });
+
+    const res = document.getElementById('c-result');
+    if (isCorrect) {
+        cScore++;
+        res.innerHTML = "<span class='correct'>정답! 🎉</span>";
+    } else {
+        res.innerHTML = `<span class='wrong'>틀렸습니다. 정답: <b>${data.name}</b> = <b>${fmtFormula(data.formula)}</b></span>`;
     }
 
-    // 5. 정답 체크 로직 (객관식)
-    function checkMultiple(choice) {
-        if(isAnswered) return;
-        const res = document.getElementById('result');
-        const data = quizList[idx];
+    cUpdateScore();
+    document.getElementById('c-next-btn').disabled = false;
 
-        if(data.ko.includes(choice)) { // 복수 정답 체크
-            res.innerHTML = "<span class='correct'>정답입니다! 🎉</span>";
-        } else {
-            res.innerHTML = `<span class='wrong'>틀렸습니다. 정답은 <b>${data.ko[0]}</b>입니다.</span>`;
-        }
-        isAnswered = true;
-        document.getElementById('next-btn').innerText = "다음 문제";
+    // Auto-advance if last
+    if (cIdx === cQuizList.length - 1) {
+        document.getElementById('c-next-btn').innerText = '결과 보기 →';
     }
+}
 
-    // 6. 정답 체크 로직 (주관식 및 다음 버튼)
-    function checkOrNext() {
-        if(currentMode === 0 || isAnswered) {
-            idx = (idx + 1) % quizList.length;
-            isAnswered = false;
-            render();
-            return;
-        }
-
-        const data = quizList[idx];
-        const res = document.getElementById('result');
-        
-        const ik = document.getElementById('i-ko')?.value.trim() || "";
-        const i3 = document.getElementById('i-en3')?.value.trim().toLowerCase() || "";
-        const i1 = document.getElementById('i-en1')?.value.trim().toUpperCase() || "";
-
-        const isKoCorrect = data.ko.includes(ik);
-        const isEn3Correct = data.en3.map(v => v.toLowerCase()).includes(i3);
-        const isEn1Correct = data.en1.map(v => v.toUpperCase()).includes(i1);
-
-        let correct = (currentMode === 2) ? (isEn3Correct && isEn1Correct) : (isKoCorrect && isEn3Correct && isEn1Correct);
-
-        if(correct) {
-                res.innerHTML = "<span class='correct'>완벽합니다! 🎉</span>";
-        } else {
-            res.innerHTML = `<span class='wrong'>오답! 정답: ${data.ko[0]}, ${data.en3[0]}, ${data.en1[0]}</span>`;
-        }
-        isAnswered = true;
-        document.getElementById('next-btn').innerText = "다음 문제";
+function cNext() {
+    if (cIdx < cQuizList.length - 1) {
+        cIdx++;
+        cRenderQ();
+    } else {
+        cShowResult();
     }
+}
 
-    function move(step) {
-        const len = quizList.length;
-        // 음수 방지 처리된 인덱스 이동
-        idx = (idx + step + len) % len;
-        isAnswered = false;
-        render();
+function cShowResult() {
+    const wrap = document.getElementById('chem-quiz');
+    wrap.innerHTML = `
+        <div class="chem-card" style="padding:50px 30px">
+            <div class="question-label">퀴즈 완료!</div>
+            <div class="question-main" style="font-size:3rem; margin:20px 0">${cScore} <span style="color:var(--text-muted);font-size:1.5rem">/ ${cTotal}</span></div>
+            <div class="question-sub">${Math.round(cScore/cTotal*100)}% 정답률</div>
+        </div>
+        <div class="chem-nav" style="margin-top:16px">
+            <button class="main-btn" onclick="cStart()" style="background:var(--accent2)">같은 범위 다시 풀기</button>
+            <button class="main-btn secondary" onclick="cReset()">범위 재설정</button>
+        </div>
+    `;
+}
+
+function cReset() {
+    document.getElementById('chem-quiz').classList.remove('active');
+    // re-build quiz wrap in case it was replaced by result
+    const app = document.getElementById('chem-app').querySelector('.app-content');
+    let qw = document.getElementById('chem-quiz');
+    if (!qw || !qw.querySelector('#c-card')) {
+        // rebuild
+        qw.innerHTML = `
+            <div class="chem-progress">
+                <span class="prog-text" id="c-prog-text">1 / 10</span>
+                <div class="prog-bar-wrap"><div class="prog-bar" id="c-prog-bar" style="width:0%"></div></div>
+                <button class="back-btn" onclick="cReset()">↺ 재설정</button>
+            </div>
+            <div class="chem-card" id="c-card">
+                <div class="question-label" id="c-label"></div>
+                <div class="question-main" id="c-main"></div>
+                <div class="question-sub" id="c-sub"></div>
+            </div>
+            <div id="c-result"></div>
+            <div class="chem-options" id="c-options"></div>
+            <div class="chem-nav">
+                <button class="main-btn secondary" onclick="cNext()" id="c-next-btn" disabled>다음 문제 →</button>
+            </div>
+        `;
     }
+    cInit();
+}
+
+function cUpdateScore() {
+    document.getElementById('c-score-badge').innerText = `${cScore} / ${cTotal}`;
+}
+
+// Init amino on load
+aRender();
 </script>
-
 </body>
 </html>
